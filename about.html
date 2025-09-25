@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jorge Merlo — Portafolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-start:#0f172a;  /* slate-900 */
+      --bg-end:#111827;    /* gray-900 */
+      --brand:#7c3aed;     /* violet-600 */
+      --brand-2:#22d3ee;   /* cyan-400 */
+      --text:#e5e7eb;      /* gray-200 */
+      --muted:#9aa3b2;     /* slate-400 */
+      --radius:18px;
+      --shadow:0 20px 40px rgba(0,0,0,.35);
+    }
+    html,body{height:100%}
+    body{
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--text);
+      background:
+        radial-gradient(120% 140% at 10% 0%, #0b1220, transparent 60%),
+        linear-gradient(180deg,var(--bg-start),var(--bg-end));
+    }
+
+    /* NAV */
+    .navbar{backdrop-filter: blur(10px); background:rgba(15,23,42,.6)!important; border-bottom:1px solid rgba(255,255,255,.06)}
+    .navbar-brand{font-weight:800; letter-spacing:.2px}
+    .nav-link{color:var(--text)!important; opacity:.85}
+    .nav-link:hover,.nav-link.active{opacity:1}
+    .btn-cta{background:linear-gradient(135deg,var(--brand),var(--brand-2)); color:#0b1220; font-weight:700; border:none}
+
+    /* Toggler (3 líneas) visible en oscuro */
+    .navbar-toggler{ border-color: rgba(255,255,255,.35); }
+    .navbar-dark .navbar-toggler-icon{
+      background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(229,231,235,0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+    .navbar-toggler:focus{ box-shadow:0 0 0 .2rem rgba(124,58,237,.35); }
+
+    /* HERO */
+    .hero{padding:96px 0 56px}
+    .badge-soft{border:1px dashed rgba(255,255,255,.18); color:var(--muted); border-radius:999px; padding:.35rem .7rem; display:inline-flex; align-items:center; gap:.5rem}
+    .badge-soft .dot{width:8px; height:8px; border-radius:999px; background:linear-gradient(135deg,var(--brand),var(--brand-2))}
+    .hero-title{font-weight:800; line-height:1.1}
+    .hero-sub{color:var(--muted)}
+    .avatar{width:64px; height:64px; border-radius:16px; background:linear-gradient(135deg,var(--brand),var(--brand-2)); box-shadow:var(--shadow)}
+
+    /* CARDS / SECTIONS */
+    .section{padding:56px 0}
+    .glass{background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); box-shadow:var(--shadow)}
+    .card.glass{overflow:hidden}
+    .card.glass img{object-fit:cover}
+    .section-title{font-weight:800; margin-bottom:.5rem}
+    .text-muted-2{color:var(--muted)}
+
+    /* TIMELINE */
+    .timeline{position:relative}
+    .timeline::before{content:""; position:absolute; left:10px; top:0; bottom:0; width:2px; background:linear-gradient(180deg,var(--brand),transparent)}
+    .t-item{position:relative; padding-left:38px; margin-bottom:20px}
+    .t-item::before{content:""; position:absolute; left:4px; top:.4rem; width:14px; height:14px; border-radius:999px; background:linear-gradient(135deg,var(--brand),var(--brand-2)); box-shadow:0 0 0 3px rgba(124,58,237,.25)}
+
+    /* PROYECTOS: miniaturas cuadradas 100×100 */
+    #proyectos .project-thumb{
+      width:100px; height:100px;
+      margin:16px auto 0;
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    #proyectos .project-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+    #proyectos .card .card-body{ text-align:center; padding-top:12px; }
+
+    .card.glass{ --bs-card-color: var(--text); color: var(--text); }
+    .card.glass .card-title{ color: var(--text)!important; font-weight:800; text-shadow:0 1px 2px rgba(0,0,0,.45); }
+    .card.glass .card-text, .card.glass small, .card.glass .text-muted-2{ color:#cbd5e1!important; opacity:1!important; }
+
+    /* FOOTER */
+    footer{border-top:1px solid rgba(255,255,255,.08)}
+
+    /* Neon fluid trail global (sin rastro) */
+    #glowCanvas{position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none}
+    body > *:not(#glowCanvas){position:relative; z-index:1}
+    @media (max-width:768px){ #glowCanvas{display:none;} }
+    @media (prefers-reduced-motion:reduce){ #glowCanvas{display:none;} }
+  </style>
+</head>
+<body>
+  <!-- Canvas global del glow -->
+  <canvas id="glowCanvas" aria-hidden="true"></canvas>
+
+  <!-- NAVBAR (colapsa en < 992px) -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+        <span class="avatar"></span> Jorge Merlo
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsEx"
+              aria-controls="navbarsEx" aria-expanded="false" aria-label="Alternar navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsEx">
+        <ul class="navbar-nav ms-auto align-items-center gap-2">
+          <li class="nav-item"><a class="nav-link active" href="about.html">Sobre mí</a></li>
+          <li class="nav-item"><a class="nav-link" href="resume.html">CV</a></li>
+          <li class="nav-item"><a class="nav-link" href="projects.html">Proyectos</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link" href="#estudiante">Estudiante</a></li>
+
+          <!-- CTA escritorio -->
+          <li class="nav-item d-none d-lg-block">
+            <a class="btn btn-cta ms-lg-2" href="contact.html">Contrátame</a>
+          </li>
+          <!-- CTA móvil -->
+          <li class="nav-item d-lg-none mt-2">
+            <a class="btn btn-cta w-100" href="contact.html">Contrátame</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <div class="badge-soft mb-3"><span class="dot"></span> Ingeniero en Sistemas · QA · Web</div>
+          <h1 class="hero-title display-5 mb-3">Diseño y desarrollo <span class="text-info">centrados en experiencia</span>.</h1>
+          <p class="hero-sub lead">Creo interfaces limpias, accesibles y veloces. Me enfoco en buenas prácticas, pruebas y métricas para que cada entrega impacte.</p>
+          <div class="d-flex gap-2 flex-wrap mt-3">
+            <a class="btn btn-cta btn-lg" href="projects.html">Ver proyectos</a>
+            <a class="btn btn-outline-light btn-lg" href="contact.html">Hablemos</a>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="card glass p-3">
+            <img class="rounded-3" src="https://i.blogs.es/27587e/wikiloc/450_1000.jpg" alt="Mockup de sitio" height="280">
+            <div class="p-3">
+              <p class="mb-0 text-muted-2">Último caso de estudio</p>
+              <p class="mb-0 text-muted-2">Optimización de rendimiento y accesibilidad para una landing de producto.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SERVICIOS -->
+  <section class="section" id="servicios">
+    <div class="container">
+      <h2 class="section-title">Servicios</h2>
+      <p class="text-muted-2 mb-4">Soluciones end-to-end para tu presencia digital.</p>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="card glass h-100 p-3">
+            <div class="card-body">
+              <p class="mb-0 text-muted-2"><strong>UX/UI Branding</strong></p>
+              <p class="card-text text-muted-2">Sistemas de diseño, wireframes y componentes reutilizables.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card glass h-100 p-3">
+            <div class="card-body">
+              <p class="mb-0 text-muted-2"><strong>Web</strong></p>
+              <p class="card-text text-muted-2">Sitios rápidos, SEO ready y pensados para conversión.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card glass h-100 p-3">
+            <div class="card-body">
+              <p class="mb-0 text-muted-2"><strong>QA</strong></p>
+              <p class="card-text text-muted-2">Automatización de pruebas, accesibilidad y Core Web Vitals.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROYECTOS -->
+  <section class="section" id="proyectos">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-end mb-3">
+        <div>
+          <h2 class="section-title mb-0">Proyectos</h2>
+          <small class="text-muted-2">Selección reciente</small>
+        </div>
+        <a href="projects.html" class="btn btn-outline-light">Ver todos</a>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="card glass h-100">
+            <div class="project-thumb">
+              <img src="https://www.pueblosmagicos.es/wp-content/uploads/2024/02/app-pm-1.png" alt="Rutas Mágicas HN">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Rutas Mágicas HN</h5>
+              <p class="card-text text-muted-2">App turística con mapa, filtros y reservas.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card glass h-100">
+            <div class="project-thumb">
+              <img src="https://i.blogs.es/df247b/komoot/650_1200.jpg" alt="Ficohsa Seguros">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Ficohsa Seguros</h5>
+              <p class="card-text text-muted-2">Landing corporativa con formularios y FAQ.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card glass h-100">
+            <div class="project-thumb">
+              <img src="https://i.blogs.es/097447/alltrails/450_1000.jpg" alt="CineCrítico">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">CineCrítico</h5>
+              <p class="card-text text-muted-2">Sitio de reseñas con panel de métricas.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LÍNEA DE TIEMPO / CV SHORT -->
+  <section class="section" id="cv">
+    <div class="container">
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <h2 class="section-title">Experiencia</h2>
+          <div class="timeline">
+            <div class="t-item">
+              <h6 class="mb-1">QA Developer · Banco Ficohsa</h6>
+              <small class="text-muted-2">2024 — Presente</small>
+              <p class="mb-0 text-muted-2">Automatización, pruebas móviles y reportes.</p>
+            </div>
+            <div class="t-item">
+              <h6 class="mb-1">Diseño & Frontend · Freelance</h6>
+              <small class="text-muted-2">2022 — 2024</small>
+              <p class="mb-0 text-muted-2">Sitios responsive con foco en UX.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <h2 class="section-title">Habilidades</h2>
+          <div class="row g-2">
+            <div class="col-6"><div class="glass p-3 h-100">HTML · CSS · JS</div></div>
+            <div class="col-6"><div class="glass p-3 h-100">React · Bootstrap</div></div>
+            <div class="col-6"><div class="glass p-3 h-100">Playwright · Cypress</div></div>
+            <div class="col-6"><div class="glass p-3 h-100">Oracle SQL · PL/SQL</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO CTA -->
+  <section class="section" id="contacto">
+    <div class="container">
+      <div class="glass p-4 p-md-5 text-center">
+        <h2 class="section-title">¿Construimos algo juntos?</h2>
+        <p class="text-muted-2 mb-4">Cuéntame sobre tu proyecto y te respondo pronto.</p>
+        <a href="contact.html" class="btn btn-cta btn-lg">Contacto</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERFIL ESTUDIANTIL -->
+  <section class="section" id="estudiante">
+    <div class="container">
+      <span class="badge-soft mb-3 d-inline-flex"><span class="dot"></span> UNITEC · Certificado</span>
+      <h2 class="section-title">Perfil Estudiantil</h2>
+      <p class="text-muted-2 mb-4">Datos básicos y experiencia durante el Certificado en Desarrollo y Diseño Web.</p>
+
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="glass p-4 h-100">
+            <ul class="list-unstyled mb-0">
+              <li class="mb-2"><strong>Nombre completo:</strong> Jorge Luis Merlo Sauceda</li>
+              <li class="mb-2"><strong>Código de estudiante:</strong> <span id="codigo-estudiante">HS62789</span></li>
+              <li class="mb-2"><strong>Carrera:</strong> Certificado en Desarrollo y Diseño Web</li>
+              <li class="mb-0"><strong>Hobbies / intereses:</strong> Diseño UI, crear sitios web, videojuegos, correr, series y aprender QA / automatización.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="glass p-4 h-100">
+            <h3 class="h5 mb-3">Experiencia y comentarios</h3>
+            <ul class="text-muted-2 mb-0">
+              <li>Fortalecí fundamentos de HTML, CSS, responsive y buenas prácticas.</li>
+              <li>Usé Bootstrap para maquetar rápido con componentes reutilizables y <em>glass cards</em>.</li>
+              <li>Mejoré criterios de UX/UI (jerarquía visual, contraste, accesibilidad básica).</li>
+              <li>Versionamiento con Git y publicación simple (GitHub Pages / Wix).</li>
+              <li>Trabajo iterativo con feedback y entregables orientados a portafolio.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-4">
+    <div class="container d-flex flex-column flex-sm-row align-items-center justify-content-between gap-2">
+      <small class="text-muted-2">© 2025 Jorge Merlo. Hecho con Bootstrap.</small>
+    </div>
+  </footer>
+
+  <!-- Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Neon Fluid Trail (sutil, sin rastro) -->
+  <script>
+  (function(){
+    const canvas = document.getElementById('glowCanvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d', { alpha:true });
+    let dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    function resize(){ canvas.width=Math.floor(innerWidth*dpr); canvas.height=Math.floor(innerHeight*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); }
+    resize(); addEventListener('resize', resize);
+
+    const trail=[], MAX=30, FADE=0.16, SIZE=[26,50]; let lastGen=0;
+    let mouse={x:innerWidth/2,y:innerHeight/2};
+    const addPoint=(x,y)=>{ trail.push({x,y,life:1,seed:Math.random()*360}); if(trail.length>MAX) trail.shift(); };
+    addEventListener('mousemove',e=>{mouse.x=e.clientX; mouse.y=e.clientY; addPoint(mouse.x,mouse.y);},{passive:true});
+    addEventListener('touchmove',e=>{const t=e.touches[0]; mouse.x=t.clientX; mouse.y=t.clientY; addPoint(mouse.x,mouse.y);},{passive:true});
+    const lerp=(a,b,t)=>a+(b-a)*t, hue=t=>(t*60)%360;
+
+    function tick(t){
+      ctx.globalCompositeOperation='source-over';
+      ctx.fillStyle=`rgba(15,23,42,${FADE})`; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+      ctx.globalCompositeOperation='lighter';
+      if(t-lastGen>45){ addPoint(mouse.x,mouse.y); lastGen=t; }
+      for(const p of trail){
+        p.life*=0.965; const r=lerp(SIZE[1],SIZE[0],1-p.life);
+        const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,r);
+        const hh=(p.seed+hue(t/1000))%360;
+        g.addColorStop(0,`hsla(${hh},95%,65%,${0.12*p.life})`);
+        g.addColorStop(1,`hsla(${hh},95%,65%,0)`);
+        ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p.x,p.y,r,0,Math.PI*2); ctx.fill();
+      }
+      for(let i=trail.length-1;i>=0;i--) if(trail[i].life<0.02) trail.splice(i,1);
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+  </script>
+</body>
+</html>
